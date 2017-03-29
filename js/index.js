@@ -1,3 +1,4 @@
+
 (function(){
 
   var frog_controller = {
@@ -33,27 +34,21 @@ var start_game = function() {
   $("body").on("keydown", function(event){
      var key = event.which; //event uvijek prozivede isti broj bez obzira na tastaturu koja se koristi, to je univerzalno
 
-     //up
-
        if (key === 38){
        up();
      }
 
-     //down
        if (key === 40){
        down();
      }
 
-     //left
       if (key === 37){
        left();
    }
 
-     //right
        if (key === 39){
        right();
    }
-
    });
 
 
@@ -108,39 +103,55 @@ logs.forEach(function(eachLog){
 return onLog;
 }
 
+
+
+
 var change = true;
-
-var draw_frog = function () {
-if (change) {
-    context.drawImage(sprites, frog_controller.image[0], frog_controller.image[1], frog_controller.image[2], frog_controller.image[3], frog_controller.x, frog_controller.y, 23, 17);
-  }
-  else {
-    (context.drawImage(deadsprite, 4, 2, 19, 24, frog_controller.x, frog_controller.y, 19, 24));
-
-  var what = setInterval(function() {
-    game.lives--;
-    game.reset();
-      clearInterval(what);
-      },2000);
-  }
-
-
-  if ((frog_controller.y < 280) && (frog_controller.y > 113) && (onLog()===false)) {
-
-    console.log("YOURE DEAD");
-    context.drawImage(deadsprite, 4, 2, 19, 24, frog_controller.x, frog_controller.y, 19, 24);
-
-
-      var what1 = setInterval(function() {
-        console.log("POTATO!")
-        game.lives--;
-        game.reset();
-        clearInterval(what1);
-      },2000);
+var deadByCar = function () {
+  if (change) {
+    // console.log("cabbage");
+      context.drawImage(sprites, frog_controller.image[0], frog_controller.image[1], frog_controller.image[2], frog_controller.image[3], frog_controller.x, frog_controller.y, 23, 17);
     }
+    else {
+      (context.drawImage(deadsprite, 4, 2, 19, 24, frog_controller.x, frog_controller.y, 19, 24));
 
+      var what = setInterval(function() {
+      // console.log("tomato");
+      console.log("tomato");
+      game.reset();
+              clearInterval(what);
+            },50);
+            game.lives--;
+
+
+    }
 };
 
+var deadInWater = function(){
+  if ((frog_controller.y < 280) && (frog_controller.y > 113) && (onLog()===false)) {
+
+  context.drawImage(deadsprite, 4, 2, 19, 24, frog_controller.x, frog_controller.y, 19, 24);
+    var what1 = setTimeout(function() {
+      // console.log("POTATO!");
+      game.reset();
+      // clearInterval(what1);
+    },50);
+game.lives--;
+  }
+};
+
+var draw_frog = function () {
+
+    if (deadByCar()){
+    // game.lives--;
+    console.log("Car");
+
+    }
+    else if (deadInWater()){
+      // game.lives--;
+      console.log("Water");
+    }
+};
 var draw_info = function() {
     draw_lives();
     context.font = 'bold 14pt arial';
@@ -172,17 +183,15 @@ var draw_cars = function() {
         if (cars[i].collision > 1) {
           change = false;
           cars[i].collision = 0;
-          // draw_frog();
         console.log("it works");
       }
-
     }
 };
 
 
 //prva
 var draw_logs = function() {
-    for (var i=0; i< 10; i++) {
+    for (var i=0; i< 11; i++) {
         logs[i].move();
         logs[i].detectcollision();
         logs[i].draw_log();
@@ -283,15 +292,16 @@ var logs;
 var make_logs = function() {
     logs = [
         make_single_log(7),
-        make_single_log(7, 150, 1),
+        make_single_log(7, 150, 3),
         make_single_log(8),
         make_single_log(8, 200),
         make_single_log(9),
+        make_single_log(9, 100, 1),
         make_single_log(10),
         make_single_log(11),
         make_single_log(11, 200),
         make_single_log(12),
-        make_single_log(12, 200)
+        make_single_log(12, 200, 3)
     ];
     return logs;
 };
@@ -300,23 +310,22 @@ var make_logs = function() {
 var make_single_log = function(row, x, len) {
     switch(row) {
         case 7:
-            return new Log(x==null?399:x, rows[row], row, 2, 1, len==null?2:len);
+            return new Log(x==null?399:x, rows[row], row, 1, 1, len==null?2:len);
         case 8:
-            return new Log(x==null?-85:x, rows[row], row, 4, -1, len==null?3:len);
+            return new Log(x==null?0:x, rows[row], row, 4, -1, len==null?3:len);
         case 9:
-            return new Log(x==null?399:x, rows[row], row, 2, -1, len==null?3:len);
+            return new Log(x==null?399:x, rows[row], row, 2, 1, len==null?3:len);
         case 10:
-            return new Log(x==null?-85:x, rows[row], row, 2, 1, len==null?0:len);
+            return new Log(x==null?0:x, rows[row], row, 2, -1, len==null?2:len);
         case 11:
-            return new Log(x==null?399:x, rows[row], row, 4, 1, len==null?1:len);
+            return new Log(x==null?399:x, rows[row], row, 3, 1, len==null?1:len);
         case 12:
-            return new Log(x==null?-85:x, rows[row], row, 3, -1, len==null?2:len);
+            return new Log(x==null?0:x, rows[row], row, 3, -1, len==null?0:len);
     }
 };
 
   var Car = function(x, y, row, speed, model) {
     this.collision = 0;
-
     this.posX = x;
     this.posY = y;
     this.row = row;
@@ -362,7 +371,7 @@ var make_single_log = function(row, x, len) {
       var minX = centerX + halfX;
       if ((frog_controller.x + frog_controller.width >= minX) && (frog_controller.x - frog_controller.width <= maxX) && (frog_controller.y === this.posY)) {
       this.collision++;
-console.log(this.collision);
+// console.log(this.collision);
       }
     };
     };
@@ -414,16 +423,10 @@ var Log = function (x, y, row, speed, dir, length) {
     var maxX = centerX + halfX;
     var minX = centerX - halfX;
     if ((frog_controller.x + frog_controller.width >= minX) && (frog_controller.x - frog_controller.width <= maxX) && (frog_controller.y === this.posY)) {
-      console.log(this.posX);
+      // console.log(this.posX);
       console.log("i am working");
 
       frog_controller.x = frog_controller.x - (this.dir * this.speed);
-          //  if (this.posX> 399) {
-          //    this.posX = 0;
-          //  }
-          //  if ((this.posX + this.width) < 0) {
-          //    this.posX = 399;
-          //  }
 
     }
   };
@@ -441,7 +444,7 @@ var Game = function() {
     this.current = -1;
     this.maximum = -1;
     change = true;
-    draw_frog();
+    // draw_frog();
         frog_controller.x = 187;
         frog_controller.y = 503;
         frog_controller.image = [12, 369, 23, 17];
