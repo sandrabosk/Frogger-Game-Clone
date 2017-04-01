@@ -9,8 +9,6 @@
     image: [12, 369, 23, 17]
   };
 
-
-
 var models = [
     {width: 30, height: 22, dir: 1},
     {width: 29, height: 24, dir: -1},
@@ -32,7 +30,13 @@ var start_game = function() {
   game = new Game();
 
   $("body").on("keydown", function(event){
+
+
      var key = event.which; //event uvijek prozivede isti broj bez obzira na tastaturu koja se koristi, to je univerzalno
+
+     if (game.lives===0) {
+        key.preventDefault();
+     }
 
        if (key === 38){
        up();
@@ -103,60 +107,46 @@ logs.forEach(function(eachLog){
 return onLog;
 }
 
-
-
-
 var change = true;
-var deadByCar = function () {
+var draw_frog = function () {
+
   if (change) {
-    // console.log("cabbage");
       context.drawImage(sprites, frog_controller.image[0], frog_controller.image[1], frog_controller.image[2], frog_controller.image[3], frog_controller.x, frog_controller.y, 23, 17);
     }
     else {
       (context.drawImage(deadsprite, 4, 2, 19, 24, frog_controller.x, frog_controller.y, 19, 24));
 
-      var what = setInterval(function() {
-      // console.log("tomato");
-      console.log("tomato");
       game.reset();
-              clearInterval(what);
-            },50);
-            game.lives--;
-
-
+      game.lives--;
+      if (game.lives >= 1){
+        fadeOut('WATCH OUT!!!');
+      }
     }
-};
 
-var deadInWater = function(){
-  if ((frog_controller.y < 280) && (frog_controller.y > 113) && (onLog()===false)) {
+    if ((frog_controller.y < 280) && (frog_controller.y > 113) && (onLog()===false)) {
 
-  context.drawImage(deadsprite, 4, 2, 19, 24, frog_controller.x, frog_controller.y, 19, 24);
-    var what1 = setTimeout(function() {
-      // console.log("POTATO!");
-      game.reset();
-      // clearInterval(what1);
-    },50);
-game.lives--;
+    context.drawImage(deadsprite, 4, 2, 19, 24, frog_controller.x, frog_controller.y, 19, 24);
+      var what1 = setTimeout(function() {
+        console.log("POTATO!");
+        game.reset();
+        clearInterval(what1);
+      },50);
+  game.lives--;
+  if (game.lives >= 1){
+    fadeOut('OOOOOPS!!');
   }
-};
-
-var draw_frog = function () {
-
-    if (deadByCar()){
-    // game.lives--;
-    console.log("Car");
-
     }
-    else if (deadInWater()){
-      // game.lives--;
-      console.log("Water");
-    }
+  check_win();
+
 };
 var draw_info = function() {
     draw_lives();
-    context.font = 'bold 14pt arial';
-    context.fillStyle = '#00EE00';
-    context.fillText('Score: ', 4, 560);
+      context.font = 'bold 14pt arial';
+      context.fillStyle = '#00EE00';
+      context.fillText('Level ', 74, 545);
+      draw_level();
+      context.fillText('Score: ', 4, 560);
+      context.fillText('Highscore: ', 170, 560);
     draw_score();
 };
 
@@ -168,10 +158,21 @@ var draw_lives = function() {
         x += 14;
     }};
 
+var draw_level = function() {
+    context.font = 'bold 14pt arial';
+    context.fillStyle = '#00EE00';
+    context.fillText(game.level, 131, 545);
+};
+
 var draw_score = function() {
     context.font = 'bold 10pt arial';
     context.fillStyle = '#00EE00';
     context.fillText(game.score, 69, 560);
+    if (window.localStorage.highscore) {
+      // window.localStorage.clear();
+        highscore = localStorage.highscore;
+    } else highscore = 0;
+    context.fillText(highscore, 272, 560);
 };
 
 
@@ -188,8 +189,6 @@ var draw_cars = function() {
     }
 };
 
-
-//prva
 var draw_logs = function() {
     for (var i=0; i< 11; i++) {
         logs[i].move();
@@ -198,12 +197,71 @@ var draw_logs = function() {
     }
 };
 
+function fadeOut(text) {
+    var alpha = 1.0,   // full opacity
+        interval = setInterval(function () {
+          context.font = 'bold 36pt arial';
+            context.fillStyle = "rgba(255, 255, 255, " + alpha + ")";
+            context.fillText(text, 60, 240);
+            alpha = alpha - 0.05; // decrease opacity (fade out)
+            if (alpha < 0) {
+                clearInterval(interval);
+            }
+        }, 100);
+}
+
+var check_win = function () {
+  if (frog_controller.y > 60 && frog_controller.y < 100){
+    console.log("Other side");
+    game.won = true;
+    game.score += 500;
+    game.reset();
+    fadeOut('YOU MADE IT');
+    level();
+  }
+};
+
+var level = function() {
+      if (game.score > 5000){
+          // game.score += 1000;
+          game.level = 3;
+          console.log("drugi nivo");
+        }
+      else if (game.score > 2000 && game.score <=5000){
+          game.level = 2;
+          console.log("prvi nivo");
+        }
+};
 var game_over = function() {
-    context.font = 'bold 72pt arial';
-    context.fillStyle = '#FFFFFF';
-    context.fillText('GAME', 60, 150);
-    context.fillText('OVER', 60, 300);
+
+    if (game.score >= highscore) {
+        context.font = 'bold 72pt arial';
+        context.fillStyle = '#FFFFFF';
+        context.fillText('GAME', 60, 150);
+        context.fillText('OVER', 60, 300);
+        localStorage.highscore = game.score;
+        context.font = 'bold 48pt arial';
+        context.fillStyle = '#00EE00';
+        context.fillText('YOU GOT A', 20, 380);
+        context.fillText('HIGHSCORE', 6, 460);
+        context.font = 'bold 30pt arial';
+        context.fillStyle = '#00EE00';
+        context.fillText(highscore, 140, 520);
+
+    }
+    else {
+      context.font = 'bold 72pt arial';
+      context.fillStyle = '#FFFFFF';
+      context.fillText('GAME', 60, 150);
+      context.fillText('OVER', 60, 300);
+      context.fillStyle = '#FFA500';
+      context.font = 'bold 24pt arial';
+      context.fillText('YOUR SCORE IS:', 60, 400);
+      context.fillText(game.score, 170, 460);
+    }
   };
+
+
 
 //moves
  var up = function (){
@@ -232,17 +290,19 @@ var game_over = function() {
 };
 
 var left = function(){
-  frog_controller.x -=5;
+  frog_controller.x -=20;
     frog_controller.image[0] = 80;
     frog_controller.image[1] = 335;
     frog_controller.image[2] = 19;
     frog_controller.image[3] = 23;
     if (frog_controller.x < 0){
       frog_controller.x = 0;
+      game.lives--;
+      game.reset();
     }
 };
 var right = function(){
-  frog_controller.x +=5;
+  frog_controller.x +=20;
     frog_controller.image[0] = 12;
     frog_controller.image[1] = 335;
     frog_controller.image[2] = 19;
@@ -268,7 +328,6 @@ var make_cars = function() {
     ];
 };
 
-// console.log(make_cars);
 
 var make_single_car = function(row, x, model) {
     switch(row) {
@@ -292,11 +351,11 @@ var logs;
 var make_logs = function() {
     logs = [
         make_single_log(7),
-        make_single_log(7, 150, 3),
+        make_single_log(7, 150),
         make_single_log(8),
         make_single_log(8, 200),
         make_single_log(9),
-        make_single_log(9, 100, 1),
+        make_single_log(9, 100),
         make_single_log(10),
         make_single_log(11),
         make_single_log(11, 200),
@@ -310,7 +369,7 @@ var make_logs = function() {
 var make_single_log = function(row, x, len) {
     switch(row) {
         case 7:
-            return new Log(x==null?399:x, rows[row], row, 1, 1, len==null?2:len);
+            return new Log(x==null?399:x, rows[row], row, 2, 1, len==null?2:len);
         case 8:
             return new Log(x==null?0:x, rows[row], row, 4, -1, len==null?3:len);
         case 9:
@@ -356,7 +415,7 @@ var make_single_log = function(row, x, len) {
     };
     this.move = function() {
 
-      this.posX =   this.posX - (this.dir * this.speed);
+      this.posX =   this.posX - (this.dir * this.speed*game.level);
          if (this.posX> 399) {
            this.posX = 0;
          }
@@ -371,7 +430,6 @@ var make_single_log = function(row, x, len) {
       var minX = centerX + halfX;
       if ((frog_controller.x + frog_controller.width >= minX) && (frog_controller.x - frog_controller.width <= maxX) && (frog_controller.y === this.posY)) {
       this.collision++;
-// console.log(this.collision);
       }
     };
     };
@@ -437,12 +495,15 @@ var Game = function() {
   frog_controller.x = 187;
   frog_controller.y = 503;
   this.score = 0;
-  this.lives = 5;
-  this.current = -1;
-  this.maximum = -1;
+  this.lives = 3;
+  this.level = 1;
+  this.current = false;
+  this.maximum = false;
+  this.won = false;
   this.reset = function () {
-    this.current = -1;
-    this.maximum = -1;
+    this.current = false;
+    this.maximum = false;
+    this.won = false;
     change = true;
     // draw_frog();
         frog_controller.x = 187;
@@ -450,7 +511,7 @@ var Game = function() {
         frog_controller.image = [12, 369, 23, 17];
         return change;
       };
-return change;
+// return change;
 };
 
 

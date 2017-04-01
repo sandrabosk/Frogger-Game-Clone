@@ -1,6 +1,52 @@
 #game_div{
      text-align: center;
  }
+ #orange_box{
+   text-align: center;
+   background-color: #cb630a;
+   /*padding: 5px;*/
+   margin-top: 100px;
+   margin-left: 220px;
+   border-left-width: 60px;
+   border-right-width: 60px;
+   border-bottom-width: 60px;
+   border-color: #010101;
+   border-style: solid;
+   width: 700px;
+   height: 560px;
+ }
+ #black_box{
+   background-color: #000000;
+ }
+
+ #frogger-title{
+   width: 580px;
+   height: 50px;
+ }
+
+
+ #panel, #rules {
+     padding: 5px;
+     text-align: center;
+     background-color: #cb630a;
+     font: 14pt arial;
+     color: #128138;
+ }
+.instructions{
+  margin-top: 300px;
+  margin-left: 150px;
+}
+
+
+ #rules:hover {
+   cursor: pointer;
+   font: bold 16pt arial;
+ }
+
+ #panel {
+     padding: 50px;
+     display: none;
+ }
 
  canvas {
      background-color: #cb630a;

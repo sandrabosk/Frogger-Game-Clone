@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>Frogger</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script>
+    $(document).ready(function(){
+        $("#rules").click(function(){
+            $("#panel").slideToggle("slow");
+        });
+    });
+    </script>
+  </head>
+  <body>
+
+      <div id="orange_box">
+          <div id="black_box">
+            <img id="frogger-title" src = "images/frogger-title.jpg">
+          </div>
+          <p>The game's screen is divided into two halves, where the first half featured a road full of traffic while the second half is a river. When you are moving your frog through the traffic, you have to face speeding cars, buses and many other obstacles on your way which must be avoided to safely transport your frog to the other half.
+            In the second half, you will see several logs and turtles trying to have your frog and you needed to fight all these obstacles to safely cross the river.
+          </p>
+          <div id="rules" class="instructions">Instructions</div>
+          <div id="panel">Hello world!</div>
+      </div>
+
+  </body>
+</html>
