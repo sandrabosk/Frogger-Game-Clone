@@ -72,8 +72,6 @@ var start_game = function() {
     };
   };
 
-
-
   var game_loop = function() {
     draw_bg();
     draw_info();
@@ -99,7 +97,7 @@ var start_game = function() {
 
 function onLog(){
   var onLog = false;
-logs.forEach(function(eachLog){
+  logs.forEach(function(eachLog){
       if ((frog_controller.x >= eachLog.posX)&&(frog_controller.x <= eachLog.posX + eachLog.width) &&(frog_controller.y === eachLog.posY)){
     onLog = true;
   }
@@ -109,13 +107,11 @@ return onLog;
 
 var change = true;
 var draw_frog = function () {
-
   if (change) {
       context.drawImage(sprites, frog_controller.image[0], frog_controller.image[1], frog_controller.image[2], frog_controller.image[3], frog_controller.x, frog_controller.y, 23, 17);
     }
     else {
       (context.drawImage(deadsprite, 4, 2, 19, 24, frog_controller.x, frog_controller.y, 19, 24));
-
       game.reset();
       game.lives--;
       if (game.lives >= 1){
@@ -124,21 +120,21 @@ var draw_frog = function () {
     }
 
     if ((frog_controller.y < 280) && (frog_controller.y > 113) && (onLog()===false)) {
-
     context.drawImage(deadsprite, 4, 2, 19, 24, frog_controller.x, frog_controller.y, 19, 24);
       var what1 = setTimeout(function() {
         console.log("POTATO!");
         game.reset();
         clearInterval(what1);
       },50);
-  game.lives--;
-  if (game.lives >= 1){
-    fadeOut('OOOOOPS!!');
-  }
-    }
-  check_win();
+      game.lives--;
+      if (game.lives >= 1){
+        fadeOut('OOOOOPS!!');
+      }
+      }
+      check_win();
 
 };
+
 var draw_info = function() {
     draw_lives();
       context.font = 'bold 14pt arial';
@@ -174,7 +170,6 @@ var draw_score = function() {
     } else highscore = 0;
     context.fillText(highscore, 272, 560);
 };
-
 
 var draw_cars = function() {
     for (var i=0; i< cars.length; i++) {
@@ -223,7 +218,6 @@ var check_win = function () {
 
 var level = function() {
       if (game.score > 5000){
-          // game.score += 1000;
           game.level = 3;
           console.log("drugi nivo");
         }
@@ -232,8 +226,8 @@ var level = function() {
           console.log("prvi nivo");
         }
 };
-var game_over = function() {
 
+var game_over = function() {
     if (game.score >= highscore) {
         context.font = 'bold 72pt arial';
         context.fillStyle = '#FFFFFF';
@@ -261,9 +255,6 @@ var game_over = function() {
     }
   };
 
-
-
-//moves
  var up = function (){
    frog_controller.y -=30;
    game.current++;
@@ -295,21 +286,14 @@ var left = function(){
     frog_controller.image[1] = 335;
     frog_controller.image[2] = 19;
     frog_controller.image[3] = 23;
-    if (frog_controller.x < 0){
-      frog_controller.x = 0;
-      game.lives--;
-      game.reset();
-    }
 };
+
 var right = function(){
   frog_controller.x +=20;
     frog_controller.image[0] = 12;
     frog_controller.image[1] = 335;
     frog_controller.image[2] = 19;
     frog_controller.image[3] = 23;
-    if (frog_controller.x > 378){
-        frog_controller.x = 378;
-    }
 };
 
 var make_cars = function() {
@@ -345,9 +329,7 @@ var make_single_car = function(row, x, model) {
             return new Car(x==null?399:x, rows[row], row, 4, model==null?0:model);
     }
 };
-// console.log(make_single_car);
-var logs;
-//druga
+
 var make_logs = function() {
     logs = [
         make_single_log(7),
@@ -365,7 +347,6 @@ var make_logs = function() {
     return logs;
 };
 
-//treca
 var make_single_log = function(row, x, len) {
     switch(row) {
         case 7:
@@ -430,8 +411,8 @@ var make_single_log = function(row, x, len) {
       var minX = centerX + halfX;
       if ((frog_controller.x + frog_controller.width >= minX) && (frog_controller.x - frog_controller.width <= maxX) && (frog_controller.y === this.posY)) {
       this.collision++;
-      }
-    };
+        }
+      };
     };
 
 var Log = function (x, y, row, speed, dir, length) {
@@ -481,14 +462,16 @@ var Log = function (x, y, row, speed, dir, length) {
     var maxX = centerX + halfX;
     var minX = centerX - halfX;
     if ((frog_controller.x + frog_controller.width >= minX) && (frog_controller.x - frog_controller.width <= maxX) && (frog_controller.y === this.posY)) {
-      // console.log(this.posX);
       console.log("i am working");
-
       frog_controller.x = frog_controller.x - (this.dir * this.speed);
-
+      if (frog_controller.x < 0){
+        frog_controller.x = 0;
+      }
+      if (frog_controller.x > 378){
+          frog_controller.x = 378;
+      }
     }
   };
-
 };
 
 var Game = function() {
@@ -505,15 +488,12 @@ var Game = function() {
     this.maximum = false;
     this.won = false;
     change = true;
-    // draw_frog();
         frog_controller.x = 187;
         frog_controller.y = 503;
         frog_controller.image = [12, 369, 23, 17];
-        return change;
       };
-// return change;
+      return change;
 };
-
 
 start_game();
 

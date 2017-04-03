@@ -6,25 +6,63 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script>
+
     $(document).ready(function(){
-        $("#rules").click(function(){
+        $(".rules").click(function(){
             $("#panel").slideToggle("slow");
         });
     });
     </script>
+
   </head>
   <body>
-
       <div id="orange_box">
           <div id="black_box">
-            <img id="frogger-title" src = "images/frogger-title.jpg">
+            <img id="frogger-title" src="images/frogger-title.jpg">
           </div>
-          <p>The game's screen is divided into two halves, where the first half featured a road full of traffic while the second half is a river. When you are moving your frog through the traffic, you have to face speeding cars, buses and many other obstacles on your way which must be avoided to safely transport your frog to the other half.
-            In the second half, you will see several logs and turtles trying to have your frog and you needed to fight all these obstacles to safely cross the river.
-          </p>
-          <div id="rules" class="instructions">Instructions</div>
-          <div id="panel">Hello world!</div>
+          <div class="text1">
+            THIS GAME IS A CLONE OF THE KONAMI'S ORIGINAL VERSION OF FROGGER GAME;
+            SPRITES AND PARTS OF THE CODE USED IN THIS GAME ARE TAKEN FROM OPEN ONLINE SOURCES.
+          </div>
+          <div class="position">
+            <img class="img1" src="images/frog.jpg">
+            <span class="rules">Instructions</span>
+          </div>
+          <div id="panel" class="text2"> Use ARROW KEYS to take frog to the grass on the other side.
+            Be aware of the cars and use the logs and turtles so your frog doesn't end up in the water.
+            You have 3 lives. Good luck!
+          </div>
+          <div class="position1">
+            <img class="img2" src="images/frog.jpg">
+
+            <a  href="index.html"><span class="rules">Play The Game</span></a>
+          </div>
       </div>
+      <script>
+      var $el = $(".text1:first"), text = $.trim($el.text()),
+          words = text.split(" "), html = "";
+
+      for (var i = 0; i < words.length; i++) {
+        html += "<span>" + words[i] + ((i+1) === words.length ? "" : " ") + "</span>";
+      };
+      $el.html(html).children().hide().each(function(i){
+      $(this).delay(i*300).fadeIn(1000);
+        });
+      $el.find("span").promise().done(function(){
+      $el.text(function(i, text){
+       return $.trim(text);
+    });
+});
+      // var $el = $(".text1:first"), text = $el.text(),
+      //     words = text.split(" ");
+      // var html = "";
+      // for (var i = 0; i < words.length; i++) {
+      //     html += "<span>" + words[i] + " </span>";
+      // };
+      // $el.html(html).children().hide().each(function(i){
+      //   $(this).delay(i*400).fadeIn(1000);
+      // });
+      </script>
 
   </body>
 </html>
