@@ -44,18 +44,22 @@ var start_game = function() {
 
        if (key === 38){
        up();
+       obj.play();
      }
 
        if (key === 40){
        down();
+       obj.play();
      }
 
       if (key === 37){
        left();
+       obj.play();
    }
 
        if (key === 39){
        right();
+       obj.play();
    }
    });
 
@@ -75,6 +79,19 @@ var start_game = function() {
         setInterval(game_loop, 100);
     };
   };
+
+
+var obj = document.createElement("audio");
+        obj.src="dp_frogger_hop.wav";
+        obj.volume=0.50;
+        obj.autoPlay=false;
+        obj.preLoad=true;
+
+var obj_1 = document.createElement("audio");
+                obj_1.src="dp_frogger_squash.wav";
+                obj_1.volume=0.50;
+                obj_1.autoPlay=false;
+                obj_1.preLoad=true;
 
 //game_loop is a function that's been called onload and executes 10 times per second
 //it consists of all draw functions used in the code
@@ -124,6 +141,7 @@ var draw_frog = function () {
       game.lives--;
       if (game.lives >= 1){
         fadeOut('WATCH OUT!!!');
+        obj_1.play();
       }
     }
 
@@ -136,6 +154,7 @@ var draw_frog = function () {
       game.lives--;
       if (game.lives >= 1){
         fadeOut('OOOOOPS!!');
+        obj_1.play();
         }
       }
       check_win();
@@ -171,7 +190,7 @@ var draw_score = function() {
     context.fillStyle = '#00EE00';
     context.fillText(game.score, 69, 560);
     if (window.localStorage.highscore) {
-      //window.localStorage.clear();
+      // window.localStorage.clear();
         highscore = localStorage.highscore;
     } else highscore = 0;
     context.fillText(highscore, 272, 560);
@@ -243,7 +262,6 @@ var game_over = function() {
         context.font = 'bold 30pt arial';
         context.fillStyle = '#00EE00';
         context.fillText(highscore, 140, 520);
-
     }
     else {
       context.font = 'bold 72pt arial';
