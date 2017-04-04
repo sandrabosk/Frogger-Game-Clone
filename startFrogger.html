@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title>Frogger</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style_start.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script>
 
@@ -16,16 +16,17 @@
 
   </head>
   <body>
+    <div class="big_box">
       <div id="orange_box">
           <div id="black_box">
-            <img id="frogger-title" src="images/frogger-title.jpg">
+            <img id="frogger-title" src="images/frogger_title.png">
           </div>
           <div class="text1">
             THIS GAME IS A CLONE OF THE KONAMI'S ORIGINAL VERSION OF FROGGER GAME;
             SPRITES AND PARTS OF THE CODE USED IN THIS GAME ARE TAKEN FROM OPEN ONLINE SOURCES.
           </div>
           <div class="position">
-            <img class="img1" src="images/frog.jpg">
+            <img class="img1" src="images/frog.png">
             <span class="rules">Instructions</span>
           </div>
           <div id="panel" class="text2"> Use ARROW KEYS to take frog to the grass on the other side.
@@ -33,35 +34,27 @@
             You have 3 lives. Good luck!
           </div>
           <div class="position1">
-            <img class="img2" src="images/frog.jpg">
+            <img class="img2" src="images/frog.png">
 
             <a  href="index.html"><span class="rules">Play The Game</span></a>
           </div>
       </div>
+    </div>
       <script>
-      var $el = $(".text1:first"), text = $.trim($el.text()),
-          words = text.split(" "), html = "";
+          var $el = $(".text1:first"), text = $.trim($el.text()),
+              words = text.split(" "), html = "";
 
-      for (var i = 0; i < words.length; i++) {
-        html += "<span>" + words[i] + ((i+1) === words.length ? "" : " ") + "</span>";
-      };
-      $el.html(html).children().hide().each(function(i){
-      $(this).delay(i*300).fadeIn(1000);
+          for (var i = 0; i < words.length; i++) {
+            html += "<span>" + words[i] + ((i+1) === words.length ? "" : " ") + "</span>";
+          };
+          $el.html(html).children().hide().each(function(i){
+            $(this).delay(i*300).fadeIn(1000);
+            });
+          $el.find("span").promise().done(function(){
+          $el.text(function(i, text){
+           return $.trim(text);
+          });
         });
-      $el.find("span").promise().done(function(){
-      $el.text(function(i, text){
-       return $.trim(text);
-    });
-});
-      // var $el = $(".text1:first"), text = $el.text(),
-      //     words = text.split(" ");
-      // var html = "";
-      // for (var i = 0; i < words.length; i++) {
-      //     html += "<span>" + words[i] + " </span>";
-      // };
-      // $el.html(html).children().hide().each(function(i){
-      //   $(this).delay(i*400).fadeIn(1000);
-      // });
       </script>
 
   </body>
